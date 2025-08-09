@@ -1,10 +1,79 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <h1 class="text-4xl font-bold">Welcome to AI Habitat Tracker</h1>
-  <p class="mt-4 text-lg text-zinc-300">
-    Build better habits and get AI-powered insights for long-term success.
-  </p>
+  <!-- HERO -->
+  <section class="text-center py-16">
+    <h1 class="text-5xl font-extrabold tracking-tight">
+      Build Better Habits with <span class="bg-gradient-to-r from-fuchsia-500 to-orange-400 bg-clip-text text-transparent">AI Habitat Tracker</span>
+    </h1>
+    <p class="mt-4 text-lg text-zinc-300 max-w-2xl mx-auto">
+      Track your routines, get predictions on your streaks, and receive smart suggestions calibrated to your schedule.
+    </p>
+
+    <div class="mt-8 flex justify-center gap-3">
+      <a href="/habits" class="px-5 py-3 rounded-xl bg-white/10 ring-1 ring-white/20 hover:bg-white/15 text-white font-medium">
+        Start Tracking
+      </a>
+      <a href="/insights" class="px-5 py-3 rounded-xl bg-zinc-900 ring-1 ring-white/10 hover:bg-zinc-800 text-zinc-100">
+        See AI Insights
+      </a>
+    </div>
+
+    <!-- tiny credibility strip -->
+    <p class="mt-6 text-xs text-zinc-400">Private by default • Works offline • Export anytime</p>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="max-w-5xl mx-auto grid md:grid-cols-3 gap-4">
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <div class="text-2xl mb-2">📝</div>
+      <h3 class="font-semibold text-white">1. Log your habits</h3>
+      <p class="text-zinc-400 text-sm mt-1">Create daily/weekly targets and mark them done in seconds.</p>
+    </div>
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <div class="text-2xl mb-2">🤖</div>
+      <h3 class="font-semibold text-white">2. Let AI analyze</h3>
+      <p class="text-zinc-400 text-sm mt-1">We detect patterns (best time, weekday bias) and predict streak success.</p>
+    </div>
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <div class="text-2xl mb-2">🎯</div>
+      <h3 class="font-semibold text-white">3. Act on suggestions</h3>
+      <p class="text-zinc-400 text-sm mt-1">Get bite-size, personalized tweaks to keep momentum.</p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="max-w-5xl mx-auto mt-10 grid sm:grid-cols-2 gap-4">
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h4 class="font-semibold text-white">Streak Predictions</h4>
+      <p class="text-zinc-400 text-sm mt-1">Next-7-day likelihood for each habit so you can plan ahead.</p>
+    </div>
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h4 class="font-semibold text-white">Best-Time Coach</h4>
+      <p class="text-zinc-400 text-sm mt-1">Suggestions for the time of day you’re most consistent.</p>
+    </div>
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h4 class="font-semibold text-white">Focus Mode</h4>
+      <p class="text-zinc-400 text-sm mt-1">Limit to 3 priority habits to avoid overload and improve follow-through.</p>
+    </div>
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h4 class="font-semibold text-white">Export & Privacy</h4>
+      <p class="text-zinc-400 text-sm mt-1">CSV export. Local-first by default. Your data stays yours.</p>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="text-center py-14">
+    <h2 class="text-3xl font-bold">Ready to build streaks that stick?</h2>
+    <div class="mt-6 flex justify-center gap-3">
+      <a href="/habits" class="px-5 py-3 rounded-xl bg-white/10 ring-1 ring-white/20 hover:bg-white/15 text-white font-medium">
+        Create Your First Habit
+      </a>
+      <a href="/insights" class="px-5 py-3 rounded-xl bg-zinc-900 ring-1 ring-white/10 hover:bg-zinc-800 text-zinc-100">
+        Explore Insights
+      </a>
+    </div>
+  </section>
 </Layout>
