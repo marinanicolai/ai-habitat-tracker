@@ -1,48 +1,51 @@
 ---
 const { pathname } = Astro.url;
 const nav = [
-  { href: "/blog", label: "Blog" },
-  { href: "/projects", label: "Projects" },
-  { href: "/consulting", label: "Consulting" },
+  { href: "/", label: "Home" },
+  { href: "/habits", label: "Habits" },
+  { href: "/insights", label: "Insights" },
+  { href: "/settings", label: "Settings" },
 ];
 ---
+
 <!-- Announcement bar -->
 <div class="w-full text-center py-2 text-sm font-medium
             text-white bg-gradient-to-r from-fuchsia-600 via-pink-500 to-orange-400">
-  🚀 <a href="/journey"
+  🚀 <a href="/insights"
         class="text-white font-semibold underline underline-offset-2 hover:opacity-90">
-    Check out my $1,000,000 journey!
+    Get AI-powered insights for your habits!
   </a>
 </div>
-
 
 <!-- Main header -->
 <header class="sticky top-0 z-40 bg-[#0b0b0f]/90 backdrop-blur border-b border-white/10">
   <div class="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
     <a href="/" class="flex items-center gap-2">
-      <span class="text-xl">👩‍💻</span>
-      <span class="text-white font-semibold">Marina Nicolai</span>
+      <span class="text-xl">🎯</span>
+      <span class="text-white font-semibold">AI Habitat Tracker</span>
+      <span class="text-white font-semibold text-sm">by Marina Nicolai</span>
     </a>
 
+    <!-- Desktop navigation -->
     <nav class="hidden sm:flex items-center gap-8">
       {nav.map(i => (
         <a href={i.href}
            class={`text-zinc-300 hover:text-white transition ${
-             pathname.startsWith(i.href) ? "text-white underline underline-offset-4" : ""
+             pathname === i.href ? "text-white underline underline-offset-4" : ""
            }`}>
           {i.label}
         </a>
       ))}
     </nav>
 
-    <!-- Mobile -->
+    <!-- Mobile navigation -->
     <details class="sm:hidden text-zinc-300">
       <summary class="cursor-pointer hover:text-white">Menu</summary>
       <div class="absolute right-4 mt-2 w-40 rounded-xl bg-[#0b0b0f] border border-white/10 p-2">
         {nav.map(i => (
           <a href={i.href}
              class={`block px-3 py-2 rounded-lg text-sm text-zinc-300 hover:text-white hover:bg-white/5 ${
-               pathname.startsWith(i.href) ? "text-white bg-white/5" : ""
+               pathname === i.href ? "text-white bg-white/5" : ""
              }`}>
             {i.label}
           </a>

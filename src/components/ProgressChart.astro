@@ -1,0 +1,12 @@
+---
+const { label = "Weekly Completion", value = 0 } = Astro.props;
+---
+<div class="rounded-xl bg-zinc-900/60 ring-1 ring-white/10 p-4">
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="font-semibold text-white">{label}</h3>
+    <span class="text-zinc-300">{value}%</span>
+  </div>
+  <div class="h-2 w-full bg-zinc-800 rounded">
+    <div class="h-full bg-indigo-500 rounded" style={`width:${Math.min(100, value)}%`}></div>
+  </div>
+</div>

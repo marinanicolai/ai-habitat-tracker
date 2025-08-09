@@ -1,0 +1,17 @@
+---
+const onSubmit = `event.preventDefault(); const f=new FormData(event.target);
+const payload={ title:f.get('title'), target:Number(f.get('target')||7) };
+dispatchEvent(new CustomEvent('habit:add',{detail:payload,bubbles:true})); event.target.reset();`;
+---
+<form class="space-y-3" onsubmit={onSubmit}>
+  <input name="title" placeholder="Habit name (e.g., Morning Run)" required
+         class="w-full rounded-lg bg-zinc-900 text-white px-3 py-2 ring-1 ring-white/10" />
+  <div class="flex items-center gap-3">
+    <label class="text-sm text-zinc-300">Weekly target</label>
+    <input name="target" type="number" min="1" max="14" value="7"
+           class="w-20 rounded bg-zinc-900 text-white px-2 py-1 ring-1 ring-white/10" />
+  </div>
+  <button class="px-4 py-2 rounded-lg bg-white/10 ring-1 ring-white/20 hover:bg-white/15 text-white">
+    Add Habit
+  </button>
+</form>
