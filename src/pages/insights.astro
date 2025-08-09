@@ -1,8 +1,88 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import ProgressChart from "../components/ProgressChart.astro";
+
+/** ---------- Mock data (replace with real history) ----------
+  history: last 14 days of completions across all habits (1 = done, 0 = missed)
+*/
+const history: number[] = [1,1,0,1,1,0,1,  1,0,1,1,1,0,1];
+
+// Compute basic stats
+const days = history.length;
+const done = history.filter(Boolean).length;
+const completionPct = Math.round((done / days) * 100);
+
+// “Consistency score” — favors streaks & fewer gaps (0–100)
+const gaps = history.join("").split("1").filter(Boolean).length - 1; // rough gap count
+const longestStreak = Math.max(
+  ...history.join("").split("0").map(s => s.length)
+);
+const consistencyScore = Math.max(
+  0,
+  Math.min(100, Math.round(50 + longestStreak * 8 - gaps * 6))
+);
+
+// “Next 7 days success” — lightweight heuristic based on recent form
+const recent = history.slice(-7).filter(Boolean).length;
+const successForecast = Math.max(
+  0,
+  Math.min(100, Math.round(40 + recent * 8 + longestStreak * 3 - gaps * 2))
+);
+
+// Best-time suggestion (stub): morning if more completions on weekdays
+// In a real app, compute by timestamped logs per habit.
+const bestTimeWindow = "7:00–9:00 AM";
+const weekdayBias = "Weekdays";
+const suggestions: string[] = [];
+if (completionPct < 70) suggestions.push("Reduce active habits to a focused top 3 for the next 2 weeks.");
+if (longestStreak < 5) suggestions.push("Aim for a 5-day micro-streak with tiny wins (5–10 min).");
+if (recent <= 4) suggestions.push("Schedule sessions in your calendar during your best-time window.");
+if (!suggestions.length) suggestions.push("Great momentum—gradually raise weekly targets by +1.");
 ---
 
 <Layout>
-  <h1 class="text-3xl font-semibold">AI-Powered Insights</h1>
-  <p class="mt-2 text-zinc-400">Get personalized suggestions based on your progress data.</p>
+  <section class="mb-8">
+    <h1 class="text-3xl font-bold">AI Insights</h1>
+    <p class="text-zinc-300 mt-2">
+      Personalized signals based on your recent activity. Replace these heuristics with your model when ready.
+    </p>
+  </section>
+
+  <!-- KPI Cards -->
+  <section class="grid sm:grid-cols-3 gap-4 mb-8">
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h3 class="text-sm text-zinc-400">Consistency Score</h3>
+      <p class="text-3xl font-semibold mt-1">{consistencyScore}<span class="text-zinc-400 text-lg">/100</span></p>
+      <p class="text-zinc-400 text-sm mt-2">Longest streak: {longestStreak} days</p>
+    </div>
+
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h3 class="text-sm text-zinc-400">Next 7-Day Success</h3>
+      <p class="text-3xl font-semibold mt-1">{successForecast}%</p>
+      <p class="text-zinc-400 text-sm mt-2">Recent (7d): {recent}/7</p>
+    </div>
+
+    <div class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h3 class="text-sm text-zinc-400">Best-Time Window</h3>
+      <p class="text-3xl font-semibold mt-1">{bestTimeWindow}</p>
+      <p class="text-zinc-400 text-sm mt-2">Bias: {weekdayBias}</p>
+    </div>
+  </section>
+
+  <!-- Charts -->
+  <section class="grid sm:grid-cols-2 gap-4 mb-10">
+    <ProgressChart label="Completion Rate (14 days)" value={completionPct} />
+    <ProgressChart label="Success Forecast (Next 7 days)" value={successForecast} />
+  </section>
+
+  <!-- Recommendations -->
+  <section class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+    <h2 class="font-semibold text-white mb-2">Suggested Next Actions</h2>
+    <ul class="list-disc pl-6 space-y-1 text-zinc-300">
+      {suggestions.map((s) => <li>{s}</li>)}
+    </ul>
+    <p class="text-xs text-zinc-500 mt-3">
+      Tip: keep sessions small and consistent; increase difficulty only after a stable streak.
+    </p>
+  </section>
 </Layout>

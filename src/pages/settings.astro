@@ -1,8 +1,121 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <h1 class="text-3xl font-semibold">Settings</h1>
-  <p class="mt-2 text-zinc-400">Update your preferences, export your data, or reset your account.</p>
+  <h1 class="text-3xl font-bold mb-6">Settings</h1>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <!-- Notifications -->
+    <section class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h2 class="font-semibold text-white">Notifications</h2>
+      <p class="text-sm text-zinc-400 mb-3">Pick a default reminder time.</p>
+
+      <label class="block text-sm text-zinc-300 mb-1" for="reminderTime">Reminder time</label>
+      <input id="reminderTime" type="time"
+             class="rounded bg-zinc-900 text-white px-3 py-2 ring-1 ring-white/10" />
+    </section>
+
+    <!-- Goals -->
+    <section class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h2 class="font-semibold text-white">Goals</h2>
+      <p class="text-sm text-zinc-400 mb-3">Limit active habits to improve focus.</p>
+
+      <label class="block text-sm text-zinc-300 mb-1" for="focusCap">Max active habits</label>
+      <input id="focusCap" type="number" min="1" max="10" value="3"
+             class="w-24 rounded bg-zinc-900 text-white px-3 py-2 ring-1 ring-white/10" />
+    </section>
+
+    <!-- Appearance -->
+    <section class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h2 class="font-semibold text-white">Appearance</h2>
+      <p class="text-sm text-zinc-400 mb-3">Choose a theme.</p>
+
+      <select id="theme" class="rounded bg-zinc-900 text-white px-3 py-2 ring-1 ring-white/10">
+        <option value="system">System</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </section>
+
+    <!-- Data -->
+    <section class="rounded-2xl bg-zinc-900/60 ring-1 ring-white/10 p-5">
+      <h2 class="font-semibold text-white">Data</h2>
+      <p class="text-sm text-zinc-400 mb-3">Export or reset your habit data.</p>
+
+      <div class="flex gap-3">
+        <button id="exportCsv"
+                class="px-4 py-2 rounded-lg bg-white/10 ring-1 ring-white/20 hover:bg-white/15 text-white">
+          Export CSV
+        </button>
+        <button id="resetData"
+                class="px-4 py-2 rounded-lg bg-red-500/90 hover:bg-red-500 text-white">
+          Reset All
+        </button>
+      </div>
+      <p id="saveStatus" class="text-xs text-zinc-500 mt-3"></p>
+    </section>
+  </div>
+
+  <div class="mt-6">
+    <button id="saveBtn"
+            class="px-5 py-3 rounded-xl bg-white/10 ring-1 ring-white/20 hover:bg-white/15 text-white font-medium">
+      Save Settings
+    </button>
+  </div>
+
+  <!-- Minimal client-side logic -->
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const KEY = "ai-habitat:settings";
+    const HABITS_KEY = "ai-habitat:habits"; // if you store habits in localStorage
+
+    // Load saved settings
+    const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+    if (saved.reminderTime) $("reminderTime").value = saved.reminderTime;
+    if (saved.focusCap) $("focusCap").value = saved.focusCap;
+    if (saved.theme) $("theme").value = saved.theme;
+
+    // Save settings
+    $("saveBtn").addEventListener("click", () => {
+      const payload = {
+        reminderTime: $("reminderTime").value || "08:00",
+        focusCap: Number($("focusCap").value || 3),
+        theme: $("theme").value || "system",
+      };
+      localStorage.setItem(KEY, JSON.stringify(payload));
+      const s = $("saveStatus");
+      s.textContent = "Settings saved.";
+      setTimeout(() => (s.textContent = ""), 2000);
+
+      // Optional: apply light/dark instantly
+      if (payload.theme === "dark") document.documentElement.classList.add("dark");
+      else if (payload.theme === "light") document.documentElement.classList.remove("dark");
+      else {
+        // system: let OS decide; you can refine with prefers-color-scheme
+        document.documentElement.classList.remove("dark");
+      }
+    });
+
+    // Export CSV (very basic)
+    $("exportCsv").addEventListener("click", () => {
+      const habits = JSON.parse(localStorage.getItem(HABITS_KEY) || "[]");
+      const rows = [["title","streak","weekly","target"]];
+      habits.forEach(h => rows.push([h.title, h.streak ?? 0, h.weekly ?? 0, h.target ?? 7]));
+      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = "habits.csv"; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Reset
+    $("resetData").addEventListener("click", () => {
+      if (!confirm("This will delete all local data. Continue?")) return;
+      localStorage.removeItem(KEY);
+      localStorage.removeItem(HABITS_KEY);
+      location.reload();
+    });
+  </script>
 </Layout>
